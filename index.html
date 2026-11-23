@@ -75,6 +75,10 @@
     .sidebar::before { content: ""; display: block; height: 4px; background: var(--gradient-brand); }
     .sidebar .app-name { margin: 16px 0 12px; padding: 0 15px 14px; border-bottom: 1px solid var(--color-border); text-align: left; }
     .sidebar .app-name-link { display: inline-block; padding: 0; margin: 0; color: var(--color-content-primary); font-weight: 700; font-size: 1.12rem; letter-spacing: -0.01em; }
+    /* Geniusee wordmark above the site title */
+    .sidebar .app-name-link .brand { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+    .sidebar .app-name-link .brand-logo { display: block; height: 22px; width: auto; max-width: 100%; }
+    .sidebar .app-name-link .brand-title { display: block; color: var(--color-content-primary); font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; }
     .sidebar .search { border-bottom: 1px solid var(--color-border); margin: 0 0 6px; padding: 16px 15px 14px; }
     .sidebar .search input {
       border: 1px solid var(--color-border); background: var(--color-bg-primary); font-family: var(--font-sans);
@@ -271,7 +275,8 @@
     // Render ```mermaid fences into <div class="mermaid"> blocks, then run mermaid
     // after each page render (docsify re-creates the DOM on every route change).
     window.$docsify = {
-      name: 'Litra Knowledge Base',
+      name: '<span class="brand"><img class="brand-logo" src="assets/geniusee-logo.svg" alt="Geniusee" /><span class="brand-title">Litra Knowledge Base</span></span>',
+      nameLink: '#/',
       repo: '',
       homepage: 'README.md',
       loadSidebar: true,
