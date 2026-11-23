@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Litra Knowledge Base</title>
+  <meta name="description" content="Litra Knowledge Base - logistics theory, the Litra platform and a glossary, built with docsify." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;900&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css" />
+  <style>
+    /* Geniusee light theme tokens (verbatim from the Geniusee workspace rules) */
+    :root {
+      --color-content-primary:#27273D;
+      --color-content-secondary:#3A3A5A;
+      --color-content-tertiary:#7E7EA6;
+      --color-content-inverted-primary:#FFFFFF;
+      --color-bg-primary:#FFFFFF;
+      --color-bg-secondary:#F0F0FA;
+      --color-bg-tertiary:#C7C6EC;
+      --color-bg-muted:#DFDEF4;
+      --color-bg-inverted-primary:#161626;
+      --color-accent-default:#695EFE;
+      --color-accent-hover:#7F76FE;
+      --color-accent-pressed:#4C3EFE;
+      --color-accent-muted:#D6D6FF;
+      --color-accent2-primary:#FFDD2C;
+      --color-accent2-muted:#FFF0AA;
+      --color-border:#DFDEF4;
+      --color-shadow:rgba(0,0,128,.09);
+      --gradient-brand:linear-gradient(135deg,#695EFE 0%,#FF6AF8 100%);
+      --font-sans:"Raleway","Helvetica Neue",Helvetica,Arial,sans-serif;
+      --mono-font: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+      /* docsify + sidebar roles, mapped onto the tokens above */
+      --theme-color: var(--color-accent-default);
+      --sb-bg: var(--color-bg-primary);
+      --sb-hover: var(--color-bg-secondary);
+      --sb-group-1: var(--color-bg-secondary);
+      --sb-group-2: var(--color-bg-muted);
+      --sb-pill: var(--color-accent-muted);
+      --sb-active-text: var(--color-accent-pressed);
+      --sb-text: var(--color-content-secondary);
+      --sb-label: var(--color-content-secondary);
+    }
+
+    /* ---- base ---- */
+    body { background: var(--color-bg-primary); font-family: var(--font-sans); color: var(--color-content-secondary); }
+    .content { background: var(--color-bg-primary); }
+    .markdown-section { max-width: 900px; color: var(--color-content-secondary); font-size: 15.5px; line-height: 1.65; }
+
+    /* ---- headings ---- */
+    .markdown-section h1, .markdown-section h2,
+    .markdown-section h3, .markdown-section h4 { color: var(--color-content-primary); font-weight: 700; letter-spacing: -0.01em; }
+    .markdown-section h1 { font-size: 2rem; font-weight: 900; padding-bottom: .55rem; position: relative; }
+    .markdown-section h1::after { content: ""; position: absolute; left: 0; bottom: 0; width: 64px; height: 4px; border-radius: 2px; background: var(--gradient-brand); }
+    .markdown-section h2 { font-size: 1.42rem; margin-top: 2.2rem; padding-bottom: .3rem; border-bottom: 2px solid var(--color-accent-muted); }
+    .markdown-section h3 { font-size: 1.15rem; color: var(--color-content-primary); }
+    .markdown-section h4 { font-size: 1rem; color: var(--color-content-secondary); }
+    /* docsify wraps heading text in an anchor: no link underline, brand ink instead of vue.css grey */
+    .markdown-section h1 a, .markdown-section h2 a, .markdown-section h3 a, .markdown-section h4 a { border-bottom: none !important; color: inherit; font-weight: inherit; }
+    .markdown-section .anchor span { color: inherit; }
+    .markdown-section h1 .anchor span, .markdown-section h2 .anchor span, .markdown-section h3 .anchor span { color: var(--color-content-primary); }
+    .markdown-section h4 .anchor span { color: var(--color-content-secondary); }
+
+    /* ---- links ---- */
+    .app-name-link img, .app-name-link span { color: var(--color-content-primary); font-weight: 700; }
+    .markdown-section a { color: var(--color-accent-pressed); text-decoration: none; border-bottom: 1px solid rgba(105, 94, 254, 0.4); font-weight: 600; }
+    .markdown-section a:hover { color: var(--color-accent-pressed); border-bottom-color: var(--color-accent-pressed); }
+
+    /* ---- sidebar ---- */
+    .sidebar { background: var(--sb-bg); border-right: 1px solid var(--color-border); padding-top: 0; }
+    .sidebar::before { content: ""; display: block; height: 4px; background: var(--gradient-brand); }
+    .sidebar .app-name { margin: 16px 0 12px; padding: 0 15px 14px; border-bottom: 1px solid var(--color-border); text-align: left; }
+    .sidebar .app-name-link { display: inline-block; padding: 0; margin: 0; color: var(--color-content-primary); font-weight: 700; font-size: 1.12rem; letter-spacing: -0.01em; }
+    .sidebar .search { border-bottom: 1px solid var(--color-border); margin: 0 0 6px; padding: 16px 15px 14px; }
+    .sidebar .search input {
+      border: 1px solid var(--color-border); background: var(--color-bg-primary); font-family: var(--font-sans);
+      border-radius: 8px; padding: 8px 11px; font-size: .85rem; color: var(--color-content-primary);
+    }
+    .sidebar .search input:focus { border-color: var(--color-accent-default); outline: none; box-shadow: 0 0 0 3px rgba(105, 94, 254, 0.18); }
+
+    .sidebar-nav { padding: 0 0 28px; line-height: 1.5; }
+    .sidebar-nav ul, .sidebar-nav li { list-style: none !important; margin: 0; padding: 0; }
+    .sidebar-nav li::before { content: none !important; display: none !important; }
+    .sidebar-nav li { margin: 1px 0; }
+    .sidebar-nav li > a {
+      display: block; color: var(--sb-text);
+      padding: 7px 15px; border: none !important; border-radius: 0;
+      transition: background .12s ease, color .12s ease;
+    }
+    .sidebar-nav li > a:hover { color: var(--sb-active-text); background: var(--sb-hover); }
+    .sidebar-nav li.active > a,
+    .sidebar-nav > ul > li > p > a.active {
+      color: var(--sb-active-text); font-weight: 700;
+      background: var(--sb-pill); border-radius: 8px; margin: 2px 8px;
+    }
+    /* section labels: plain-text items without a link */
+    .sidebar-nav > ul > li > p:not(:has(a)),
+    .sidebar-nav > ul > li > strong:not(:has(a)) {
+      color: var(--sb-label); text-transform: uppercase; letter-spacing: .1em;
+      font-size: .7rem; font-weight: 700; margin: 24px 0 6px; padding: 0 15px;
+    }
+    .sidebar-nav a { text-transform: none; }
+    .sidebar-nav > ul > li > p:has(a) { margin: 1px 0; padding: 0; font-size: inherit; letter-spacing: normal; }
+    .sidebar-nav > ul > li > p > a { display: block; color: var(--sb-text); padding: 7px 15px; }
+    .sidebar-nav > ul > li > p > a:hover { color: var(--sb-active-text); background: var(--sb-hover); }
+    .sidebar-nav > ul > li > ul > li:has(> ul .active) > a { color: var(--sb-active-text); font-weight: 700; background: transparent; }
+    .sidebar-nav > ul > li:has(.active) > p:not(:has(a)) { color: var(--sb-active-text); }
+    .sidebar-nav > ul > li:has(.active) > ul { background: var(--sb-group-1); border-radius: 8px; padding: 4px 0; margin: 0 6px; }
+    .sidebar-nav > ul > li > ul > li > ul:has(.active) { background: var(--sb-group-2); border-radius: 8px; padding: 2px 0; }
+    .sidebar-nav ul { margin: 0; border-left: none; padding-left: 0; }
+    .sidebar-nav > ul > li > ul > li > a { padding: 7px 14px 7px 22px; font-size: .9rem; color: var(--sb-text); }
+    .sidebar-nav > ul > li > ul > li > ul > li > a { padding: 5px 14px 5px 36px; font-size: .82rem; color: var(--sb-text); }
+    .sidebar-nav > ul > li > ul > li > ul > li > a:hover { color: var(--sb-active-text); background: var(--sb-hover); }
+
+    /* ---- Mermaid diagrams ---- */
+    .mermaid { text-align: center; margin: 24px 0 10px; padding: 18px 12px; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-bg-primary); box-shadow: 0 2px 10px var(--color-shadow); }
+    .mermaid svg { max-width: 100%; height: auto; }
+    .mermaid .node rect,
+    .mermaid .node polygon,
+    .mermaid .cluster rect { rx: 8px; ry: 8px; }
+    .mermaid .node rect,
+    .mermaid .node circle,
+    .mermaid .node ellipse,
+    .mermaid .node polygon,
+    .mermaid .node path { filter: drop-shadow(0 1px 2px rgba(0, 0, 128, 0.14)); }
+    .mermaid .edgePath path,
+    .mermaid .flowchart-link { stroke-width: 1.6px; }
+    .mermaid .edgeLabel { font-size: 12.5px; }
+    .mermaid .label, .mermaid span, .mermaid p { font-weight: 500; }
+    /* Unclassed flowchart nodes only: shapes told apart by saturation of the Geniusee purple ramp.
+       Nodes with a classDef keep their own colours; mind maps keep their branch palette. */
+    .mermaid .node.default:not(.mindmap-node) rect    { fill: #F0F0FA !important; }
+    .mermaid .node.default:not(.mindmap-node) polygon { fill: #D6D6FF !important; }
+    .mermaid .node.default:not(.mindmap-node) circle,
+    .mermaid .node.default:not(.mindmap-node) ellipse { fill: #C7C6EC !important; }
+    .mermaid .node.default:not(.mindmap-node) path    { fill: #C7C6EC !important; }
+    /* mind-map root: white label on the purple circle (dark ink fails contrast there) */
+    .mermaid .mindmap-node.section-root .nodeLabel, .mermaid .mindmap-node.section-root .nodeLabel p { color: #FFFFFF !important; font-weight: 700; }
+    /* the "In plain words / For the tech team" captions right after a diagram */
+    .mermaid + p, .mermaid + p + p { font-size: .94rem; }
+
+    /* ---- sidebar collapse (burger) aligned to the right edge ---- */
+    .sidebar-toggle {
+      background: transparent; border: 0; box-sizing: border-box;
+      width: 300px; padding: 0 18px 0 0;
+      display: flex; justify-content: flex-end; align-items: center;
+    }
+    .sidebar-toggle .sidebar-toggle-button { position: static; width: 20px; }
+    .sidebar-toggle .sidebar-toggle-button span { background-color: var(--color-accent-default); }
+    body.close .sidebar-toggle { width: auto; justify-content: flex-start; padding: 0 0 0 16px; }
+
+    /* ---- blockquotes = callouts ("In short", tips, warnings) ---- */
+    .markdown-section blockquote {
+      background: var(--color-bg-secondary);
+      border-left: 4px solid var(--color-accent-default);
+      border-radius: 8px;
+      color: var(--color-content-primary);
+      padding: 12px 18px;
+      margin: 18px 0;
+    }
+    .markdown-section blockquote p { color: var(--color-content-primary); margin: .4em 0; }
+    .markdown-section blockquote blockquote { background: var(--color-bg-primary); border-left-color: var(--color-accent-pressed); margin: 10px 0 2px; }
+
+    /* ---- tables ---- */
+    .markdown-section table { display: table; width: 100%; border-collapse: collapse; margin: 14px 0; font-size: .93rem; }
+    .markdown-section th, .markdown-section td { border: 1px solid var(--color-border); padding: 8px 11px; vertical-align: top; }
+    .markdown-section th { background: var(--color-bg-muted); color: var(--color-content-primary); font-weight: 700; text-transform: uppercase; font-size: .72rem; letter-spacing: .05em; text-align: left; }
+    .markdown-section td { background: var(--color-bg-primary); }
+    .markdown-section tr:nth-child(2n) td { background: var(--color-bg-secondary); }
+
+    /* ---- code ---- */
+    .markdown-section code { font-family: var(--mono-font); background: var(--color-bg-secondary); color: var(--color-content-primary); border-radius: 4px; padding: 2px 6px; font-size: .9em; }
+    .markdown-section pre { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; }
+    .markdown-section pre > code { background: transparent; color: var(--color-content-primary); }
+
+    /* ---- misc ---- */
+    .markdown-section hr { border: 0; border-top: 1px solid var(--color-border); margin: 28px 0; }
+    .markdown-section strong { color: var(--color-content-primary); font-weight: 700; }
+    .search input { border-radius: 6px; }
+    .search .matching-post { border-bottom-color: var(--color-border); }
+    .markdown-section mark, .search .search-keyword { background: var(--color-accent2-muted); color: var(--color-content-primary); font-style: normal; }
+  </style>
+</head>
+<body>
+  <div id="app">Loading the knowledge base...</div>
+
+  <!-- Mermaid (ESM), Geniusee palette -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    var MM_FONT = '"Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif';
+    // Data charts (pie): the Geniusee categorical series, in order.
+    var SERIES = ['#695EFE', '#FF6AF8', '#FFDD2C', '#7E7EA6', '#4C3EFE', '#C7C6EC'];
+    // Structure diagrams (timeline periods, mind-map branches): same tokens, yellow moved last,
+    // because Mermaid lightens these fills and a lightened #FFDD2C turns into an off-brand neon yellow.
+    var STRUCT = ['#695EFE', '#FF6AF8', '#7E7EA6', '#4C3EFE', '#C7C6EC', '#FFDD2C'];
+    var STRUCT_TEXT = ['#FFFFFF', '#161626', '#161626', '#FFFFFF', '#161626', '#161626'];
+    var scale = {};
+    for (var i = 0; i < 12; i++) {
+      scale['cScale' + i] = STRUCT[i % 6];
+      scale['cScaleLabel' + i] = STRUCT_TEXT[i % 6];
+      scale['cScaleInv' + i] = '#DFDEF4';
+    }
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: 'loose',
+      theme: 'base',
+      fontFamily: MM_FONT,
+      flowchart: { curve: 'basis', htmlLabels: true, padding: 14, nodeSpacing: 45, rankSpacing: 55, useMaxWidth: true },
+      sequence: { useMaxWidth: true, mirrorActors: false, actorMargin: 30, boxMargin: 10, messageFontWeight: 500 },
+      themeVariables: Object.assign({
+        fontFamily: MM_FONT,
+        fontSize: '14px',
+        // core nodes
+        primaryColor: '#F0F0FA',
+        primaryBorderColor: '#695EFE',
+        primaryTextColor: '#27273D',
+        secondaryColor: '#FFFFFF',
+        tertiaryColor: '#F0F0FA',
+        lineColor: '#7E7EA6',
+        textColor: '#27273D',
+        // subgraphs
+        clusterBkg: '#FFFFFF',
+        clusterBorder: '#C7C6EC',
+        titleColor: '#4C3EFE',
+        // edge labels and notes
+        edgeLabelBackground: '#FFFFFF',
+        noteBkgColor: '#FFF0AA',
+        noteBorderColor: '#FCB80A',
+        noteTextColor: '#27273D',
+        // sequence diagrams
+        actorBkg: '#F0F0FA',
+        actorBorder: '#695EFE',
+        actorTextColor: '#27273D',
+        actorLineColor: '#C7C6EC',
+        signalColor: '#3A3A5A',
+        signalTextColor: '#27273D',
+        labelBoxBkgColor: '#FFF0AA',
+        labelBoxBorderColor: '#FCB80A',
+        labelTextColor: '#27273D',
+        loopTextColor: '#27273D',
+        activationBkgColor: '#D6D6FF',
+        activationBorderColor: '#695EFE',
+        sequenceNumberColor: '#FFFFFF',
+        // state diagrams
+        stateBkg: '#F0F0FA',
+        stateBorder: '#695EFE',
+        labelColor: '#27273D',
+        altBackground: '#F0F0FA',
+        // pie
+        pie1: SERIES[0], pie2: SERIES[1], pie3: SERIES[2], pie4: SERIES[3], pie5: SERIES[4], pie6: SERIES[5],
+        pieStrokeColor: '#FFFFFF', pieOuterStrokeColor: '#DFDEF4', pieTitleTextSize: '16px', pieSectionTextSize: '13px',
+        // gitGraph
+        git0: SERIES[0], git1: SERIES[1], git2: SERIES[2], git3: SERIES[3], git4: SERIES[4],
+        // quadrant chart
+        quadrant1Fill: '#D6D6FF', quadrant2Fill: '#F0F0FA', quadrant3Fill: '#FFFFFF', quadrant4Fill: '#FFF0AA',
+        quadrant1TextFill: '#27273D', quadrant2TextFill: '#27273D', quadrant3TextFill: '#27273D', quadrant4TextFill: '#27273D',
+        quadrantPointFill: '#4C3EFE', quadrantPointTextFill: '#27273D',
+        quadrantXAxisTextFill: '#3A3A5A', quadrantYAxisTextFill: '#3A3A5A',
+        quadrantInternalBorderStrokeFill: '#C7C6EC', quadrantExternalBorderStrokeFill: '#695EFE',
+        quadrantTitleFill: '#27273D'
+      }, scale)
+    });
+    window.mermaid = mermaid;
+  </script>
+
+  <script>
+    // Render ```mermaid fences into <div class="mermaid"> blocks, then run mermaid
+    // after each page render (docsify re-creates the DOM on every route change).
+    window.$docsify = {
+      name: 'Litra Knowledge Base',
+      repo: '',
+      homepage: 'README.md',
+      loadSidebar: true,
+      subMaxLevel: 2,
+      relativePath: true,
+      auto2top: true,
+      maxLevel: 4,
+      search: {
+        placeholder: 'Search the knowledge base...',
+        noData: 'No matches.',
+        depth: 4
+      },
+      markdown: {
+        renderer: {
+          code: function (code, lang) {
+            if (lang === 'mermaid') {
+              return '<div class="mermaid" data-mermaid-src="' +
+                code.replace(/"/g, '&quot;') + '">' + code + '</div>';
+            }
+            return this.origin.code.apply(this, arguments);
+          }
+        }
+      },
+      plugins: [
+        function (hook) {
+          hook.doneEach(function () {
+            var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
+            if (!nodes.length) return;
+            nodes.forEach(function (node) {
+              if (node.getAttribute('data-processed')) {
+                node.removeAttribute('data-processed');
+                node.innerHTML = node.getAttribute('data-mermaid-src');
+              }
+            });
+            // Wait for Raleway so Mermaid measures labels with the real font,
+            // and for the Mermaid module if it is still loading.
+            var fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+            var tries = 0;
+            function run() {
+              if (!window.mermaid) {
+                if (tries++ < 50) return setTimeout(run, 100);
+                return;
+              }
+              try {
+                window.mermaid.run({ nodes: nodes });
+              } catch (e) {
+                console.error('mermaid render error', e);
+              }
+            }
+            fontsReady.then(run);
+          });
+        }
+      ]
+    };
+  </script>
+
+  <!-- docsify core -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  <!-- plugins -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@2/dist/docsify-copy-code.min.js"></script>
+</body>
+</html>

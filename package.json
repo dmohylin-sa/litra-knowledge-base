@@ -1,0 +1,9 @@
+{
+  "name": "litra-knowledge-base",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Litra Energy Logistics pre-sales knowledge base (docsify, no build step)",
+  "scripts": {
+    "start": "docsify serve . -p 4001 -o"
+  }
+}
