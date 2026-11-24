@@ -11,6 +11,14 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
   <meta name="theme-color" content="#695EFE" />
+  <script>
+    // Sign-in gate: lock the page before anything paints unless this tab is already signed in.
+    (function () {
+      var signedIn = false;
+      try { signedIn = !!sessionStorage.getItem('litra-kb.session'); } catch (e) {}
+      if (!signedIn) document.documentElement.classList.add('kb-locked');
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;900&display=swap" />
@@ -33,6 +41,8 @@
       --color-accent-muted:#D6D6FF;
       --color-accent2-primary:#FFDD2C;
       --color-accent2-muted:#FFF0AA;
+      --color-negative-primary:#EF4444;
+      --color-negative-pressed:#B91C1C;
       --color-border:#DFDEF4;
       --color-shadow:rgba(0,0,128,.09);
       --gradient-brand:linear-gradient(135deg,#695EFE 0%,#FF6AF8 100%);
@@ -192,9 +202,153 @@
     .search input { border-radius: 6px; }
     .search .matching-post { border-bottom-color: var(--color-border); }
     .markdown-section mark, .search .search-keyword { background: var(--color-accent2-muted); color: var(--color-content-primary); font-style: normal; }
+
+    /* ---- sign-in overlay ----
+       While locked, the site still renders underneath (visibility, not display, so Mermaid
+       can measure its diagrams) but nothing behind the overlay is visible or focusable. */
+    #kb-login { display: none; }
+    html.kb-locked, html.kb-locked body { overflow: hidden; }
+    html.kb-locked body > *:not(#kb-login) { visibility: hidden !important; }
+    html.kb-locked #kb-login {
+      display: flex; position: fixed; inset: 0; z-index: 9999;
+      align-items: center; justify-content: center; padding: 16px; box-sizing: border-box;
+      font-family: var(--font-sans);
+      background:
+        radial-gradient(60% 50% at 12% 8%, rgba(105, 94, 254, .38) 0%, rgba(105, 94, 254, 0) 70%),
+        radial-gradient(50% 45% at 92% 96%, rgba(255, 106, 248, .22) 0%, rgba(255, 106, 248, 0) 70%),
+        var(--color-bg-inverted-primary);
+    }
+    .kb-login-card {
+      position: relative; width: 100%; max-width: 400px; box-sizing: border-box; overflow: hidden;
+      background: var(--color-bg-primary); border-radius: 16px; padding: 34px 32px 26px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+    }
+    .kb-login-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--gradient-brand); }
+    .kb-login-logo { display: block; height: 24px; width: auto; margin: 0 0 24px; }
+    .kb-login-title { margin: 0 0 6px; font-size: 1.5rem; font-weight: 900; line-height: 1.25; letter-spacing: -0.01em; color: var(--color-content-primary); }
+    .kb-login-sub { margin: 0 0 22px; font-size: .95rem; line-height: 1.5; color: var(--color-content-secondary); }
+    .kb-login-field { display: block; margin: 0 0 14px; }
+    .kb-login-field span { display: block; margin: 0 0 6px; font-size: .8rem; font-weight: 700; color: var(--color-content-primary); }
+    .kb-login-field input {
+      display: block; width: 100%; box-sizing: border-box; padding: 11px 12px;
+      border: 1px solid var(--color-border); border-radius: 8px; background: var(--color-bg-primary);
+      font-family: var(--font-sans); font-size: .95rem; color: var(--color-content-primary);
+    }
+    .kb-login-field input::placeholder { color: var(--color-content-tertiary); }
+    .kb-login-field input:focus { outline: none; border-color: var(--color-accent-default); box-shadow: 0 0 0 3px rgba(105, 94, 254, .18); }
+    .kb-login-field input[aria-invalid="true"] { border-color: var(--color-negative-primary); }
+    .kb-login-error { min-height: 1.35em; margin: 0 0 12px; font-size: .85rem; font-weight: 600; line-height: 1.35; color: var(--color-negative-pressed); }
+    .kb-login-submit {
+      display: block; width: 100%; padding: 12px; border: 0; border-radius: 8px; cursor: pointer;
+      background: var(--color-accent-default); color: var(--color-content-inverted-primary);
+      font-family: var(--font-sans); font-size: .95rem; font-weight: 700; transition: background .12s ease;
+    }
+    .kb-login-submit:hover { background: var(--color-accent-pressed); }
+    .kb-login-submit:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(105, 94, 254, .35); }
+    .kb-login-foot { margin: 16px 0 0; font-size: .8rem; text-align: center; color: var(--color-content-secondary); }
+
+    /* signed-in strip at the end of the sidebar */
+    .kb-user { margin: 4px 15px 28px; padding-top: 12px; border-top: 1px solid var(--color-border); font-size: .8rem; color: var(--color-content-secondary); }
+    .kb-user strong { display: block; margin-top: 2px; font-weight: 600; color: var(--color-content-primary); word-break: break-all; }
+    .kb-user button { margin-top: 6px; padding: 0; border: 0; background: none; cursor: pointer; font-family: var(--font-sans); font-size: .8rem; font-weight: 700; color: var(--color-accent-pressed); }
+    .kb-user button:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
+  <!-- Sign-in overlay. A demo gate, not security: the password is in this page and the
+       Markdown files stay public in the GitHub repo. It keeps casual visitors out of the site. -->
+  <div id="kb-login" role="dialog" aria-modal="true" aria-labelledby="kb-login-title">
+    <form class="kb-login-card" id="kb-login-form" novalidate>
+      <img class="kb-login-logo" src="assets/geniusee-logo.svg" alt="Geniusee" />
+      <h2 class="kb-login-title" id="kb-login-title">Litra Knowledge Base</h2>
+      <p class="kb-login-sub">Pre-sales prep for Litra Energy Logistics. Sign in with your Geniusee email.</p>
+      <label class="kb-login-field" for="kb-login-email">
+        <span>Email</span>
+        <input id="kb-login-email" type="email" autocomplete="username" placeholder="name@geniusee.com" aria-describedby="kb-login-error" />
+      </label>
+      <label class="kb-login-field" for="kb-login-password">
+        <span>Password</span>
+        <input id="kb-login-password" type="password" autocomplete="current-password" aria-describedby="kb-login-error" />
+      </label>
+      <p class="kb-login-error" id="kb-login-error" role="alert" aria-live="polite"></p>
+      <button class="kb-login-submit" type="submit">Sign in</button>
+      <p class="kb-login-foot">Internal material for the Geniusee team.</p>
+    </form>
+  </div>
+  <script>
+    (function () {
+      var KEY = 'litra-kb.session';
+      var PASSWORD = 'geniusee';
+      var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      // The org domain is geniusee: geniusee.com, plus any other geniusee.<tld>.
+      var ORG_RE = /@geniusee\.[a-z]{2,}(\.[a-z]{2,})?$/i;
+      var current = null; // kept in memory too, for browsers where sessionStorage throws
+
+      function readSession() {
+        try { return JSON.parse(sessionStorage.getItem(KEY)); } catch (e) { return null; }
+      }
+
+      // "Signed in as ... / Sign out" at the end of the sidebar; called again after sign-in.
+      window.kbRenderUser = function () {
+        var session = current || readSession();
+        var sidebar = document.querySelector('.sidebar');
+        if (!session || !sidebar || sidebar.querySelector('.kb-user')) return;
+        var box = document.createElement('div');
+        box.className = 'kb-user';
+        box.appendChild(document.createTextNode('Signed in as'));
+        var who = document.createElement('strong');
+        who.textContent = session.email;
+        box.appendChild(who);
+        var out = document.createElement('button');
+        out.type = 'button';
+        out.textContent = 'Sign out';
+        out.addEventListener('click', function () {
+          try { sessionStorage.removeItem(KEY); } catch (e) {}
+          location.reload();
+        });
+        box.appendChild(out);
+        sidebar.appendChild(box);
+      };
+
+      var form = document.getElementById('kb-login-form');
+      var email = document.getElementById('kb-login-email');
+      var password = document.getElementById('kb-login-password');
+      var error = document.getElementById('kb-login-error');
+
+      function clearError() {
+        error.textContent = '';
+        email.removeAttribute('aria-invalid');
+        password.removeAttribute('aria-invalid');
+      }
+      function fail(message, field) {
+        clearError();
+        error.textContent = message;
+        field.setAttribute('aria-invalid', 'true');
+        field.focus();
+      }
+
+      email.addEventListener('input', clearError);
+      password.addEventListener('input', clearError);
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var value = email.value.trim();
+        if (!value) return fail('Enter your email address to continue.', email);
+        if (!EMAIL_RE.test(value)) return fail('That is not an email address. Use the form name@geniusee.com.', email);
+        if (!ORG_RE.test(value)) return fail('Use your Geniusee email, an address ending in @geniusee.com.', email);
+        if (password.value !== PASSWORD) return fail('That password is not right.', password);
+        current = { email: value, at: new Date().toISOString() };
+        try { sessionStorage.setItem(KEY, JSON.stringify(current)); } catch (e) {}
+        password.value = '';
+        clearError();
+        document.documentElement.classList.remove('kb-locked');
+        window.kbRenderUser();
+      });
+
+      if (document.documentElement.classList.contains('kb-locked')) email.focus();
+    })();
+  </script>
+
   <div id="app">Loading the knowledge base...</div>
 
   <!-- Mermaid (ESM), Geniusee palette -->
@@ -307,6 +461,10 @@
       },
       plugins: [
         function (hook) {
+          // Signed-in strip in the sidebar (the sign-in gate is defined above the app).
+          hook.ready(function () {
+            if (window.kbRenderUser) window.kbRenderUser();
+          });
           hook.doneEach(function () {
             var nodes = Array.prototype.slice.call(document.querySelectorAll('.mermaid'));
             if (!nodes.length) return;
